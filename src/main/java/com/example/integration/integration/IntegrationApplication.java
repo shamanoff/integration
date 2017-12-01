@@ -19,9 +19,12 @@ import org.springframework.messaging.support.MessageBuilder;
 @ImportResource("integration-context.xml")
 public class IntegrationApplication implements ApplicationRunner{
 
-    @Qualifier("messageChannel")
+    @Qualifier("inputChannel")
     @Autowired
-	private DirectChannel channel;
+	private DirectChannel inputChannel;
+    @Qualifier("outputChannel")
+    @Autowired
+    private DirectChannel outputChannel;
 
 	public static void main(String[] args) {
 		SpringApplication.run(IntegrationApplication.class, args);
@@ -36,10 +39,10 @@ public class IntegrationApplication implements ApplicationRunner{
 
 		Message message = new GenericMessage<String>("Hello world", headers);*/
 
-        channel.subscribe(new MessageHandler() {
+        outputChannel.subscribe(new MessageHandler() {
             @Override
             public void handleMessage(Message<?> message) throws MessagingException {
-                new PrintService().print((Message<String>)message);
+                System.out.println(message.getPayload());
             }
         });
 		Message<String> message = MessageBuilder.withPayload("Hello from builder via Channel")
@@ -47,6 +50,6 @@ public class IntegrationApplication implements ApplicationRunner{
 				.build();
 		/*PrintService service = new PrintService();
 		service.print(message);*/
-        channel.send(message);
+        inputChannel.send(message);
 	}
 }

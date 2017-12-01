@@ -15,12 +15,15 @@
    http://www.springframework.org/schema/integration/stream/spring-integration-stream.xsd
 http://www.springframework.org/schema/integration/twitter ">
 
-    <int:channel id="inputChannel">
-    </int:channel>
+    <int:channel id="inputChannel"/>
+    <int:channel id="outputChannel"/>
+
     <bean class="com.example.integration.integration.PrintService" id="printService"/>
     <int:service-activator ref="printService"
                            method="print"
-                           input-channel="inputChannel">
+                           input-channel="inputChannel"
+                           output-channel="outputChannel"
+    >
 
     </int:service-activator>
 </beans>
